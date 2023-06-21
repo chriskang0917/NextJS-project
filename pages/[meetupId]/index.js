@@ -1,6 +1,18 @@
-import MeetupDetails from "@/components/meetups/MeetupDetails";
+import MeetupDetail from "@/components/meetups/MeetupDetail";
 
 const DetailsPage = () => {
-  return <MeetupDetails title={"HI"} />;
+  return <MeetupDetail />;
 };
+
+// export async function getStaticProps(context) {
+//   const meetupId = context.params.meetupId;
+
+//   return {
+//     props: {
+//       meetupData: {},
+//     },
+//     revalidate: 60,
+//   };
+// }
+
 export default DetailsPage;
