@@ -1,26 +1,64 @@
+import { MongoClient, ObjectId } from "mongodb";
+
 import MeetupDetail from "@/components/meetups/MeetupDetail";
 
-const DetailsPage = () => {
-  return <MeetupDetail />;
+const DetailsPage = ({ meetupData }) => {
+  console.log(meetupData);
+  return (
+    <MeetupDetail
+      image={meetupData.image}
+      address={meetupData.address}
+      title={meetupData.title}
+      description={meetupData.description}
+    />
+  );
 };
 
 export async function getStaticPaths() {
+  const client = await MongoClient.connect(
+    "mongodb+srv://chriskang0917:goCcWitlABR1h5Xu@nextjs.bh5lmvf.mongodb.net/meetup?retryWrites=true&w=majority"
+  );
+  const db = client.db();
+  const meetupCollection = db.collection("meetups");
+  const meetups = await meetupCollection.find({}, { _id: 1 }).toArray();
+
+  client.close();
+
   return {
     fallback: false,
-    paths: [
-      { params: { meetupId: "1" } },
-      { params: { meetupId: "2" } },
-      { params: { meetupId: "3" } },
-    ],
+    paths: meetups.map((meetup) => ({
+      params: { meetupId: meetup._id.toString() },
+    })),
   };
 }
 
 export async function getStaticProps(context) {
   const meetupId = context.params.meetupId;
 
+  // TODO: It could be refactored without redundant code
+  const client = await MongoClient.connect(
+    "mongodb+srv://chriskang0917:goCcWitlABR1h5Xu@nextjs.bh5lmvf.mongodb.net/meetup?retryWrites=true&w=majority"
+  );
+  const db = client.db();
+  const meetupCollection = db.collection("meetups");
+  const objectId = new ObjectId(meetupId);
+  const meetupData = await meetupCollection.findOne({
+    _id: objectId,
+  });
+
+  console.log(meetupData);
+
+  client.close();
+
   return {
     props: {
-      meetupData: {},
+      meetupData: {
+        id: meetupData._id.toString(),
+        title: meetupData.title,
+        description: meetupData.description,
+        image: meetupData.image,
+        address: meetupData.address,
+      },
     },
     revalidate: 60,
   };

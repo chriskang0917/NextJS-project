@@ -86,7 +86,7 @@ body {
   margin: 0;
 }
 
-body {
+/* body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
@@ -105,4 +105,4 @@ a {
   html {
     color-scheme: dark;
   }
-}
+} */
