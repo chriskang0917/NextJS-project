@@ -1,16 +1,23 @@
 import { MongoClient, ObjectId } from "mongodb";
 
 import MeetupDetail from "@/components/meetups/MeetupDetail";
+import { Fragment } from "react";
+import Head from "next/head";
 
 const DetailsPage = ({ meetupData }) => {
-  console.log(meetupData);
   return (
-    <MeetupDetail
-      image={meetupData.image}
-      address={meetupData.address}
-      title={meetupData.title}
-      description={meetupData.description}
-    />
+    <Fragment>
+      <Head>
+        <title>{meetupData.title}</title>
+        <meta name="description" content={meetupData.description} />
+      </Head>
+      <MeetupDetail
+        image={meetupData.image}
+        address={meetupData.address}
+        title={meetupData.title}
+        description={meetupData.description}
+      />
+    </Fragment>
   );
 };
 
@@ -45,8 +52,6 @@ export async function getStaticProps(context) {
   const meetupData = await meetupCollection.findOne({
     _id: objectId,
   });
-
-  console.log(meetupData);
 
   client.close();
 
